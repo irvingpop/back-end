@@ -8,8 +8,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from drf_yasg.openapi import IN_QUERY, TYPE_STRING, Parameter
 from drf_yasg.utils import swagger_auto_schema
-from rest_auth.registration.views import RegisterView as BaseRegisterView
-from rest_auth.registration.views import SocialConnectView, SocialLoginView
+from dj_rest_auth.registration.views import RegisterView as BaseRegisterView
+from dj_rest_auth.registration.views import SocialConnectView, SocialLoginView
 from rest_framework.exceptions import NotFound, ValidationError, bad_request
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated

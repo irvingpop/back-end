@@ -9,9 +9,6 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "api.apps.ApiConfig",
     "frontend.apps.FrontendConfig",
-    # Django Suit Admin Console
-    # https://django-suit.readthedocs.io
-    "suit",
     # Default Django apps:
     "django.contrib.admin",
     "django.contrib.auth",
@@ -26,17 +23,14 @@ INSTALLED_APPS = [
     # django-background-tasks
     # https://django-background-tasks.readthedocs.io/en/latest/
     "background_task",
-    # django-suit-daterange-filter
-    # https://github.com/f213/django-suit-daterange-filter
-    "date_range_filter",
     # django-rest-framework
     # https://www.django-rest-framework.org/
     "rest_framework",
     "rest_framework.authtoken",
-    "rest_auth.registration",
-    # django-rest-auth
-    # https://django-rest-auth.readthedocs.io/en/latest/
-    "rest_auth",
+    "dj_rest_auth.registration",
+    # dj-rest-auth (replaces django-rest-auth)
+    # https://dj-rest-auth.readthedocs.io/en/latest/
+    "dj_rest_auth",
     # django-allauth
     # https://django-allauth.readthedocs.io/en/latest/installation.html
     "allauth",
@@ -68,7 +62,7 @@ ROOT_URLCONF = "operationcode_backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR.joinpath("core", "templates")],
+        "DIRS": [str(BASE_DIR.joinpath("core", "templates"))],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -94,27 +88,7 @@ DATABASES = {
     }
 }
 
-# Django Suit (Admin Console)
-# https://django-suit.readthedocs.io
-SUIT_CONFIG = {
-    "MENU": (
-        {
-            "label": "Users",
-            "icon": "icon-user",
-            "models": (
-                "auth.user",
-                "core.profile",
-                "auth.group",
-                "account.emailaddress",
-            ),
-        },
-        {"app": "socialaccount", "icon": "icon-thumbs-up"},
-        "sites",
-        "-",
-        "api",
-        {"app": "background_task", "icon": "icon-tasks"},
-    )
-}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -124,6 +98,9 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 ATOMIC_REQUESTS = True
+
+# Django 3.2+ compatibility
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 EMAIL_BACKEND = config(
     "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
@@ -135,8 +112,8 @@ SERVER_EMAIL = "noreplyerrors@operationcode.org"
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
-STATIC_ROOT = BASE_DIR.joinpath("static")
-MEDIA_ROOT = BASE_DIR.joinpath("media")
+STATIC_ROOT = str(BASE_DIR.joinpath("static"))
+MEDIA_ROOT = str(BASE_DIR.joinpath("media"))
 
 SITE_ID = config("SITE_ID", default=3)
 

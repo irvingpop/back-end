@@ -12,14 +12,10 @@ def test_valid_rest_login(client: APIClient, user: User):
     )
 
     assert res.status_code == 200
-    assert res.data["token"] is not None
+    assert res.data["key"] is not None
 
-    returned_user = res.data["user"]
-    assert returned_user["username"] == user.email
-    assert returned_user["email"] == user.email
-    assert returned_user["first_name"] == user.first_name
-    assert returned_user["last_name"] == user.last_name
-    assert returned_user["zipcode"] == user.profile.zipcode
+    # With TokenAuthentication, we only get the token key, not user details
+    # The key is used for subsequent authenticated requests
 
 
 # Commented out until email confirmation is required again

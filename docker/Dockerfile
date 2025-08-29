@@ -1,4 +1,4 @@
-FROM python:3.7-alpine AS base
+FROM python:3.11-alpine AS base
 
 # Using seperate docker stage for building dependencies
 FROM base as builder

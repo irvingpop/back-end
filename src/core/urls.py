@@ -1,17 +1,11 @@
 from django.urls import include, path
 from django.views.generic import TemplateView
-from rest_auth.registration.views import SocialAccountListView, VerifyEmailView
-from rest_auth.views import PasswordChangeView, PasswordResetConfirmView
-from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
+from dj_rest_auth.registration.views import SocialAccountListView, VerifyEmailView
+from dj_rest_auth.views import PasswordChangeView, PasswordResetConfirmView
 
 from . import views
 
 urlpatterns = [
-    path(
-        "auth/password/reset/confirm/",
-        PasswordResetConfirmView.as_view(),
-        name="password_reset_confirm",
-    ),
     path(
         "auth/password/change/",
         PasswordChangeView.as_view(),
@@ -32,8 +26,6 @@ urlpatterns = [
     ),
     path("auth/social/github/", views.GithubLogin.as_view(), name="gh_rest_login"),
     path("auth/social/list/", SocialAccountListView.as_view(), name="social_list"),
-    path("auth/token/refresh", refresh_jwt_token, name="refresh_jwt"),
-    path("auth/token/verify", verify_jwt_token, name="verify_jwt"),
     path("auth/registration/", views.RegisterView.as_view(), name="rest_register"),
     path("auth/profile/", views.UpdateProfile.as_view(), name="update_profile"),
     path("auth/me/", views.UpdateProfile.as_view(), name="update_my_profile"),
@@ -49,6 +41,8 @@ urlpatterns = [
         TemplateView.as_view(),
         name="account_email_verification_sent",
     ),
-    path("auth/", include("rest_auth.urls")),
+    path("auth/", include("dj_rest_auth.urls")),
     path("auth/accounts/", include("allauth.socialaccount.urls")),
+    # Include Django's built-in password reset URLs for dj-rest-auth compatibility
+    path("", include("django.contrib.auth.urls")),
 ]

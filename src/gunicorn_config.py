@@ -231,20 +231,3 @@ def sampler(fields):
             return False, 0
         # catchall
         return True, 1
-
-
-# Added for Honeycomb instrumentation
-def post_worker_init(worker):
-    worker.log.info("beeline initialization in process pid %s", worker.pid)
-    import os
-    import beeline
-
-    # only proceed if the environment variables have beens upplied
-    if "HONEYCOMB_WRITEKEY" in os.environ and "HONEYCOMB_DATASET" in os.environ:
-        beeline.init(
-            writekey=os.getenv("HONEYCOMB_WRITEKEY"),
-            dataset=os.getenv("HONEYCOMB_DATASET"),
-            service_name="backend",
-            sampler_hook=sampler,
-            debug=False,
-        )

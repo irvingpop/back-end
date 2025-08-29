@@ -42,36 +42,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Django-Rest-Auth
-# https://django-rest-auth.readthedocs.io/en/latest/
+# https://dj-rest-auth.readthedocs.io/en/latest/
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "email"
-REST_USE_JWT = True
+# Use TokenAuthentication instead of JWT
+REST_USE_JWT = False
 
-REST_AUTH_SERIALIZERS = {
+REST_AUTH = {
     "LOGIN_SERIALIZER": "core.serializers.LoginSerializer",
     "USER_DETAILS_SERIALIZER": "core.serializers.UserDetailsSerializer",
     "PASSWORD_RESET_CONFIRM_SERIALIZER": "core.serializers.PasswordResetConfirmSerializer",
-}
-
-REST_AUTH_REGISTER_SERIALIZERS = {
-    "REGISTER_SERIALIZER": "core.serializers.RegisterSerializer"
-}
-
-jwt_secret_key = config("JWT_SECRET_KEY", default=open(".dev/dev-jwt-key").read())
-jwt_public_key = config("JWT_PUBLIC_KEY", default=open(".dev/dev-jwt-key.pub").read())
-
-# Django REST framework JWT
-# https://getblimp.github.io/django-rest-framework-jwt/
-JWT_AUTH = {
-    "JWT_PAYLOAD_HANDLER": "core.handlers.custom_jwt_payload_handler",
-    "JWT_PAYLOAD_GET_USERNAME_HANDLER": "core.handlers.get_username_from_jwt",
-    "JWT_AUTH_HEADER_PREFIX": "Bearer",
-    "JWT_EXPIRATION_DELTA": datetime.timedelta(hours=1),
-    "JWT_ALLOW_REFRESH": False,
-    "JWT_AUTH_COOKIE": None,
-    "JWT_SECRET_KEY": jwt_secret_key,
-    "JWT_PUBLIC_KEY": jwt_public_key,
-    "JWT_ALGORITHM": "RS256",
+    "REGISTER_SERIALIZER": "core.serializers.RegisterSerializer",
+    "TOKEN_MODEL": "rest_framework.authtoken.models.Token",
 }
 
 # Allauth social providers

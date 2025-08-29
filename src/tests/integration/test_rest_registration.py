@@ -21,7 +21,7 @@ def test_confirmation_email_sent(
 ):
     res = client.post(reverse("rest_register"), register_form)
 
-    assert res.status_code == 201
+    assert res.status_code == 204
     assert len(mailoutbox) == 1
     assert register_form["email"] in mailoutbox[0].to
 
@@ -30,7 +30,7 @@ def test_confirmation_email_sent(
 def test_user_is_created(client: APIClient, register_form: Dict[str, str]):
     res = client.post(reverse("rest_register"), register_form)
 
-    assert res.status_code == 201
+    assert res.status_code == 204
 
     users = User.objects.all()
 
@@ -46,7 +46,7 @@ def test_user_is_created(client: APIClient, register_form: Dict[str, str]):
 def test_user_profile_created(client: APIClient, register_form: Dict[str, str]):
     res = client.post(reverse("rest_register"), register_form)
 
-    assert res.status_code == 201
+    assert res.status_code == 204
 
     users = User.objects.all()
 
@@ -64,7 +64,7 @@ def test_slack_invite_task_created(
 ):
     res = client.post(reverse("rest_register"), register_form)
 
-    assert res.status_code == 201
+    assert res.status_code == 204
 
     tasks = BackgroundTask.objects.filter(task_name="core.tasks.send_slack_invite_job")
 

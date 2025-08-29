@@ -1,15 +1,16 @@
 from django.contrib.auth import get_user_model
-from rest_auth.registration.serializers import (
+from dj_rest_auth.registration.serializers import (
     RegisterSerializer as BaseRegisterSerializer,
 )
-from rest_auth.registration.serializers import (
-    SocialLoginSerializer as BaseSocialLoginSerializer,
+from dj_rest_auth.registration.serializers import (
+    SocialAccountSerializer as BaseSocialAccountSerializer,
 )
-from rest_auth.serializers import LoginSerializer as BaseLoginSerializer
-from rest_auth.serializers import (
+from dj_rest_auth.serializers import LoginSerializer as BaseLoginSerializer
+from dj_rest_auth.serializers import (
+    PasswordChangeSerializer as BasePasswordChangeSerializer,
     PasswordResetConfirmSerializer as BasePasswordResetConfirmSerializer,
+    UserDetailsSerializer as BaseUserDetailsSerializer,
 )
-from rest_auth.serializers import UserDetailsSerializer as BaseUserDetailsSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -50,7 +51,7 @@ class PasswordResetConfirmSerializer(BasePasswordResetConfirmSerializer):
 
 
 # noinspection PyAbstractClass
-class CustomSocialLoginSerializer(BaseSocialLoginSerializer):
+class CustomSocialLoginSerializer(BaseSocialAccountSerializer):
     """
     Extends default SocialLoginSerializer to add additional details to some
     failed login attempts
