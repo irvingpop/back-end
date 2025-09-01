@@ -31,6 +31,10 @@ INSTALLED_APPS = [
     # dj-rest-auth (replaces django-rest-auth)
     # https://dj-rest-auth.readthedocs.io/en/latest/
     "dj_rest_auth",
+    # djangorestframework-simplejwt
+    # https://django-rest-framework-simplejwt.readthedocs.io/
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     # django-allauth
     # https://django-allauth.readthedocs.io/en/latest/installation.html
     "allauth",

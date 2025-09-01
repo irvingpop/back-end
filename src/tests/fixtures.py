@@ -3,8 +3,8 @@ from typing import Dict
 import factory
 import pytest
 from django.contrib.auth.models import Group, User
+from django.urls import reverse
 from rest_framework.test import APIClient
-from rest_framework.authtoken.models import Token
 
 from tests import factories as f
 from tests import test_data as data
@@ -36,23 +36,50 @@ def profile_admin(user: User, profile_admin_group: Group) -> User:
 
 
 @pytest.fixture
+def admin_user(db) -> User:
+    admin = f.UserFactory(is_staff=True, is_superuser=True)
+    return admin
+
+
+@pytest.fixture
 def authed_client(client, user: User):
-    token, _ = Token.objects.get_or_create(user=user)
-    client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
+    # Login to get JWT token
+    response = client.post(
+        reverse("rest_login"),
+        {"email": user.email, "password": data.DEFAULT_PASSWORD}
+    )
+    # Get the JWT token from the response
+    jwt_token = response.data.get("key")  # JWT is returned as "key" for backward compatibility
+    # Set the Authorization header with JWT token
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {jwt_token}")
     return client
 
 
 @pytest.fixture
 def authed_admin_client(client, admin_user: User):
-    token, _ = Token.objects.get_or_create(user=admin_user)
-    client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
+    # Login to get JWT token
+    response = client.post(
+        reverse("rest_login"),
+        {"email": admin_user.email, "password": data.DEFAULT_PASSWORD}
+    )
+    # Get the JWT token from the response
+    jwt_token = response.data.get("key")  # JWT is returned as "key" for backward compatibility
+    # Set the Authorization header with JWT token
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {jwt_token}")
     return client
 
 
 @pytest.fixture
 def profile_admin_client(client, profile_admin: User):
-    token, _ = Token.objects.get_or_create(user=profile_admin)
-    client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
+    # Login to get JWT token
+    response = client.post(
+        reverse("rest_login"),
+        {"email": profile_admin.email, "password": data.DEFAULT_PASSWORD}
+    )
+    # Get the JWT token from the response
+    jwt_token = response.data.get("key")  # JWT is returned as "key" for backward compatibility
+    # Set the Authorization header with JWT token
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {jwt_token}")
     return client
 
 

@@ -14,7 +14,7 @@ def test_valid_rest_login(client: APIClient, user: User):
     assert res.status_code == 200
     assert res.data["key"] is not None
 
-    # With TokenAuthentication, we only get the token key, not user details
+    # With JWT enabled, dj-rest-auth returns the access token as "key" for backward compatibility
     # The key is used for subsequent authenticated requests
 
 

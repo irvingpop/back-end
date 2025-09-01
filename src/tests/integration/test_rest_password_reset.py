@@ -2,17 +2,18 @@ import re
 from typing import List
 
 from django.contrib.auth.models import User
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_encode
 from rest_framework.test import APIClient
+
+# Import allauth utilities when testing with allauth
+from allauth.account.forms import default_token_generator
+from allauth.account.utils import user_pk_to_url_str
 
 from tests.test_data import fake
 
-# Pattern to match Django's built-in password reset URL format: /reset/<uid>/<token>/
-token_pattern = re.compile(r"/reset/(?P<uid>[^/]+)/(?P<token>[^/]+)/")
+# Pattern to match our custom password reset URL format: /auth/password/reset/confirm/?uid=<uid>&token=<token>
+token_pattern = re.compile(r"/auth/password/reset/confirm/\?uid=(?P<uid>[^&]+)&token=(?P<token>[^&]+)")
 
 
 def test_password_reset_sends_email(
@@ -45,8 +46,8 @@ def test_password_reset_invalid_email(
 
 
 def test_password_reset_confirm(client: APIClient, user: User):
-    token = PasswordResetTokenGenerator().make_token(user)
-    uid = urlsafe_base64_encode(force_str(user.pk).encode())
+    token = default_token_generator.make_token(user)
+    uid = user_pk_to_url_str(user)
     password = fake.password()
 
     res = client.post(
@@ -68,7 +69,7 @@ def test_password_reset_confirm(client: APIClient, user: User):
 
 
 def test_password_reset_confirm_bad_token(client: APIClient, user: User):
-    uid = urlsafe_base64_encode(force_str(user.pk).encode())
+    uid = user_pk_to_url_str(user)
     password = fake.password()
 
     res = client.post(
@@ -87,8 +88,8 @@ def test_password_reset_confirm_bad_token(client: APIClient, user: User):
 
 
 def test_password_reset_login_with_new_password(client: APIClient, user: User):
-    token = PasswordResetTokenGenerator().make_token(user)
-    uid = urlsafe_base64_encode(force_str(user.pk).encode())
+    token = default_token_generator.make_token(user)
+    uid = user_pk_to_url_str(user)
     password = fake.password()
 
     res = client.post(
@@ -111,7 +112,7 @@ def test_password_reset_login_with_new_password(client: APIClient, user: User):
 
 
 def test_password_reset_common_password_error(client: APIClient, user: User):
-    uid = urlsafe_base64_encode(force_str(user.pk).encode())
+    uid = user_pk_to_url_str(user)
 
     res = client.post(
         reverse("rest_password_reset_confirm"),

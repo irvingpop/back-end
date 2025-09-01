@@ -2,6 +2,7 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 from dj_rest_auth.registration.views import SocialAccountListView, VerifyEmailView
 from dj_rest_auth.views import PasswordChangeView, PasswordResetConfirmView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from . import views
 
@@ -42,7 +43,6 @@ urlpatterns = [
         name="account_email_verification_sent",
     ),
     path("auth/", include("dj_rest_auth.urls")),
+    path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("auth/accounts/", include("allauth.socialaccount.urls")),
-    # Include Django's built-in password reset URLs for dj-rest-auth compatibility
-    path("", include("django.contrib.auth.urls")),
 ]
